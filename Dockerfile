@@ -24,3 +24,6 @@ RUN python -c "import numpy"
 # Prepare and install sourmash
 COPY prepare_sourma.sh .
 RUN bash prepare_sourma.sh
+
+COPY execute_workflow.sh .
+COPY generate_report.py .
