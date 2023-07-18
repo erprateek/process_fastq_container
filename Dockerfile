@@ -27,3 +27,6 @@ RUN bash prepare_sourma.sh
 
 COPY execute_workflow.sh .
 COPY generate_report.py .
+
+RUN cp execute_workflow.sh /usr/local/bin/execute_workflow.sh && chmod a+x /usr/local/bin/execute_workflow.sh;
+RUN cp generate_report.py /usr/local/bin/generate_report.py && chmod a+x /usr/local/bin/generate_report.py
