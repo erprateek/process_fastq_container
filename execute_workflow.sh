@@ -2,11 +2,11 @@
 
 set -euxo pipefail
 
-TRIM_GALORE_OUTPUTS=~/trim_galore/
-FASTQC_OUTPUTS_DIR=~/fastqc_outputs_post_trimming/
-SOURMASH_OUTPUTS=~/sourmash_outputs/
-REFERENCES_DIR=~/references/
-PIPELINE_OUTPUTS=~/outputs
+TRIM_GALORE_OUTPUTS=/trim_galore/
+FASTQC_OUTPUTS_DIR=/fastqc_outputs_post_trimming/
+SOURMASH_OUTPUTS=/sourmash_outputs/
+REFERENCES_DIR=/references/
+PIPELINE_OUTPUTS=/outputs
 print_usage() {
   echo "Usage: $0 -1 <read1.fq.gz> -2 <read2.fq.gz>"
 }
