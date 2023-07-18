@@ -8,40 +8,8 @@ SOURMASH_OUTPUTS=/sourmash_outputs/
 REFERENCES_DIR=/references/
 PIPELINE_OUTPUTS=/outputs
 print_usage() {
-  echo "Usage: $0 -1 <read1.fq.gz> -2 <read2.fq.gz>"
+  echo "Usage: $0 <read1.fq.gz> <read2.fq.gz>"
 }
-
-
-
-# Default values
-read1=""
-read2=""
-
-# Parse arguments using getopt
-options=$(getopt -o 1:2: -n "$0" -- "$@")
-if [ $? -ne 0 ]; then
-  print_usage
-  exit 1
-fi
-
-eval set -- "$options"
-
-while true; do
-  case "$1" in
-    -1)
-      read1="$2"
-      shift 2 ;;
-    -2)
-      read2="$2"
-      shift 2 ;;
-    --)
-      shift
-      break ;;
-    *)
-      print_usage
-      exit 1 ;;
-  esac
-done
 
 # Check if both read1 and read2 were provided
 if [ -z "$read1" ] || [ -z "$read2" ]; then
