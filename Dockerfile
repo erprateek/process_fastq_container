@@ -24,6 +24,3 @@ RUN python -c "import numpy"
 # Prepare and install sourmash
 COPY prepare_sourma.sh .
 RUN bash prepare_sourma.sh
-
-## Process data
-RUN 
