@@ -20,8 +20,8 @@
 	 - `sourmash sketch dna -p k=31,abund /root/git/process_fastq_container/fastqs/read*.fastq -o sample.sig.gz --name unknown_sample`
 	 - `sourmash gather sample.sig.gz gtdb-rs207.genomic-reps.dna.k31.zip --save-matches matches.zip`
  - For the organism identified in sourmash outputs, execute the cURL command to download reference:
-	 - ` curl -OJX GET "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/GCF_000155815.1/download?include_annotation_type=GENOME_FASTA,GENOME_GFF,RNA_FASTA,CDS_FASTA,PROT_FASTA,SEQUENCE_REPORT&filename=GCF_000155815.1.zip" -H "Accept: application/zip"`
-	 - `unzip GCF_000155815.1.zip`
+	 - ` curl -OJX GET "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/<ORGANISM_ID>/download?include_annotation_type=GENOME_FASTA&filename=ORGANISM_ID.zip" -H "Accept: application/zip"`
+	 - `unzip ORGANISM_ID.zip`
  - Install bwa-mem2:
 	 - `git clone https://github.com/lh3/bwa.git`
 	 - `cd bwa`
