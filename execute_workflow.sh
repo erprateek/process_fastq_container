@@ -65,4 +65,5 @@ bwa mem $REFERENCE $TRIM_GALORE_OUTPUTS/*1.fq.gz $TRIM_GALORE_OUTPUTS/*2.fq.gz |
 #python generate_report.py -f $FASTQC_OUTPUTS_DIR -t $TRIM_GALORE_OUTPUTS -s $SOURMASH_OUTPUTS -b $PIPELINE_OUTPUTS/sample.bam -o $PIPELINE_OUTPUTS/report.csv
 python generate_report.py -1 $read1 -2 $read2 -3 $TRIM_GALORE_OUTPUTS/*1.fq.gz -4 $TRIM_GALORE_OUTPUTS/*2.fq.gz -t $TRIM_GALORE_OUTPUTS -s $SOURMASH_OUTPUTS/$SOURMASH_OUTPUT_CSV -o $PIPELINE_OUTPUTS/report.csv
 #python generate_report.py -1 fastqs/read1.fastq.gz -2 fastqs/read2.fastq.gz -3 /root/trimgalore_outputs/read1_val_1.fq.gz -4 /root/trimgalore_outputs/read2_val_2.fq.gz -t /root/trimgalore_outputs/ -s /root/software/sourmash/sourmash_gather_output.csv -o report.csv
-#python create_plot.py -b $PIPELINE_OUTPUTS/sample.bam -1 $read1 -2 $read2 -o $PIPELINE_OUTPUTS/plot.png
+samtools view $PIPELINE_OUTPUTS/sample.bam | cut -f 11 > /bam_qc_output.txt
+python create_plot.py -b /bam_qc_output.txt -1 $read1 -2 $read2 -o $PIPELINE_OUTPUTS/plot.png
