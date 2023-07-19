@@ -7,23 +7,42 @@ FASTQC_OUTPUTS_DIR=/fastqc_outputs_post_trimming/
 SOURMASH_OUTPUTS=/sourmash_outputs/
 REFERENCES_DIR=/references/
 PIPELINE_OUTPUTS=/outputs
-print_usage() {
-  echo "Usage: $0 <read1.fq.gz> <read2.fq.gz>"
-}
 
-# Check if both read1 and read2 were provided
-if [ -z "$read1" ] || [ -z "$read2" ]; then
-  echo "Error: Both read1 and read2 files are required."
-  print_usage
-  exit 1
+
+#!/bin/bash
+
+# Check if the correct number of parameters is provided
+if [ $# -ne 2 ]; then
+    echo "Usage: $0 <read1.fastq> <read2.fastq>"
+    exit 1
 fi
 
 # Check if the provided files exist
-if [ ! -f "$read1" ] || [ ! -f "$read2" ]; then
-  echo "Error: One or both of the input files do not exist."
-  exit 1
+if [ ! -f "$1" ]; then
+    echo "Error: File '$1' not found."
+    exit 1
 fi
 
+if [ ! -f "$2" ]; then
+    echo "Error: File '$2' not found."
+    exit 1
+fi
+
+# Check if the provided files are in FASTQ format
+# We'll simply check if the first line starts with '@' which is a common indicator in FASTQ files
+if ! head -n 1 "$1" | grep -q '^@'; then
+    echo "Error: '$1' does not appear to be a valid FASTQ file."
+    exit 1
+fi
+
+if ! head -n 1 "$2" | grep -q '^@'; then
+    echo "Error: '$2' does not appear to be a valid FASTQ file."
+    exit 1
+fi
+echo "Both files '$1' and '$2' are valid FASTQ files. Proceeding with further processing."
+
+read1=$1
+read2=$2
 # Add your desired actions here, e.g., perform processing on read1 and read2
 
 # Example: Print the file names
