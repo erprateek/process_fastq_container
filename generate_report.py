@@ -11,7 +11,7 @@ import numpy as np
 def get_organism_from_sourmash(sourmash_csv):
     df = pd.read_csv(sourmash_csv)
     name = df['name'].iloc[0]
-    name_split = df['name'].split("=")[0]
+    name_split = name.split("=")[0]
     ncbi_id = name_split.split(" ")[0]
     organism_name = name_split.replace(ncbi_id, "").replace("strain","").lstrip().rstrip()
     return (ncbi_id, organism_name)
@@ -20,7 +20,7 @@ def get_isize_from_fq(fq):
     seq_index_base = 1
     seq_index_increment = 4
     isize_lens = []
-    with gzip.open(fq, 'rb') as fh:
+    with gzip.open(fq, 'rt') as fh:
         fqlines = fh.readlines()
         for i in range(0, len(fqlines), seq_index_increment):
             line_to_process = fqlines[i].strip()
@@ -43,7 +43,7 @@ def get_insert_size_mean_and_std(fq1, fq2):
 def get_read_len_and_ilen_for_fq(fq):
     seq_len = 0
     ilen = 0
-    with gzip.open(fq, 'rb') as fh:
+    with gzip.open(fq, 'rt') as fh:
         fqlines = fh.readlines()
         header = fqlines[0].strip()
         sequence = fqlines[1].strip()
@@ -53,7 +53,7 @@ def get_read_len_and_ilen_for_fq(fq):
     return (seq_len, ilen)
 
 def parse_trimgalore_outputs(trimgalore_output_dir):
-    reports = sorted(glob.glob(os.path.join(trimgalore_output_dir, "report.txt")))
+    reports = sorted(glob.glob(os.path.join(trimgalore_output_dir, "*report.txt")))
     content = []
     with open(reports[0]) as tfile:
         content = tfile.readlines()
@@ -75,7 +75,7 @@ def get_sequencing_configuration(fq1, fq2):
 
 def count_reads_in_fastq(fastq_file):
     count = 0
-    with gzip.open(fastq_file, 'r') as file:
+    with gzip.open(fastq_file, 'rt') as file:
         for line in file:
             if line.startswith('@'):
                 count += 1
@@ -93,7 +93,7 @@ def main():
     parser.add_argument("-2","--read2")
     parser.add_argument('-3','--read1_trimmed')
     parser.add_argument('-4','--read2_trimmed')
-    parser.add_argument("-t"."--trimgalore_output_dir")
+    parser.add_argument("-t","--trimgalore_output_dir")
     parser.add_argument('-s','--sourmash_csv')
     #parser.add_argument("-b",'--sample_bam')
     parser.add_argument("-o","--output_file")  
@@ -116,7 +116,7 @@ def main():
         'Insert_size_standard_deviation',
         'NCBI_ID'
     ]
-    df = pd.DataFrame(row, columns=cols)
+    df = pd.DataFrame([row], columns=cols)
     df.to_csv(args.output_file, index=False)
 
 if __name__ == '__main__':
