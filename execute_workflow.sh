@@ -8,9 +8,6 @@ SOURMASH_OUTPUTS=/sourmash_outputs/
 REFERENCES_DIR=/references/
 PIPELINE_OUTPUTS=/outputs
 
-
-#!/bin/bash
-
 # Check if the correct number of parameters is provided
 if [ $# -ne 2 ]; then
     echo "Usage: $0 <read1.fastq> <read2.fastq>"
@@ -77,5 +74,7 @@ bwa index $REFERENCE
 bwa mem $REFERENCE $TRIM_GALORE_OUTPUTS/*1.fq.gz $TRIM_GALORE_OUTPUTS/*2.fq.gz | samtools view -bS $PIPELINE_OUTPUTS/sample.bam
 
 ## Create plot
-python generate_report.py -f $FASTQC_OUTPUTS_DIR -t $TRIM_GALORE_OUTPUTS -s $SOURMASH_OUTPUTS -b $PIPELINE_OUTPUTS/sample.bam -o $PIPELINE_OUTPUTS/report.csv
+#python generate_report.py -f $FASTQC_OUTPUTS_DIR -t $TRIM_GALORE_OUTPUTS -s $SOURMASH_OUTPUTS -b $PIPELINE_OUTPUTS/sample.bam -o $PIPELINE_OUTPUTS/report.csv
+python generate_report.py -1 $read1 -2 $read2 -3 $TRIM_GALORE_OUTPUTS/*1.fq.gz -4 $TRIM_GALORE_OUTPUTS/*2.fq.gz -t $TRIM_GALORE_OUTPUTS -s $SOURMASH_OUTPUTS/$SOURMASH_OUTPUT_CSV -o $PIPELINE_OUTPUTS/report.csv
+#python generate_report.py -1 fastqs/read1.fastq.gz -2 fastqs/read2.fastq.gz -3 /root/trimgalore_outputs/read1_val_1.fq.gz -4 /root/trimgalore_outputs/read2_val_2.fq.gz -t /root/trimgalore_outputs/ -s /root/software/sourmash/sourmash_gather_output.csv -o report.csv
 #python create_plot.py -b $PIPELINE_OUTPUTS/sample.bam -1 $read1 -2 $read2 -o $PIPELINE_OUTPUTS/plot.png
