@@ -1,5 +1,5 @@
 #!/bin/bash
-
+source ~/.bashrc
 set -euxo pipefail
 
 TRIM_GALORE_OUTPUTS=/trim_galore/
@@ -38,18 +38,18 @@ mkdir -p $SOURMASH_OUTPUTS
 mkdir -p $PIPELINE_OUTPUTS
 
 trim_galore --output $TRIM_GALORE_OUTPUTS --fastqc --fastqc_args "--outdir $FASTQC_OUTPUTS_DIR --extract" --paired $read1 $read2
-R1_TRIMMED=$TRIM_GALORE_OUTPUTS/
+R1_TRIMMED=$TRIM_GALORE_OUTPUTS/*1.*.gz
+R2_TRIMMED=$TRIM_GALORE_OUTPUTS/*2.*.gz
 
 SOURMASH_SIGNATURE_FILE=sample.sig.gz
 SOURMASH_K=31
 SOURMASH_OUTPUT_CSV=sourmash_output.csv
-sourmash sketch dna -p k=$SOURMASH_K,abund $TRIM_GALORE_OUTPUTS/read*.fastq.gz -o $SOURMASH_OUTPUTS/$SOURMASH_SIGNATURE_FILE --name new_sample
-sourmash gather $SOURMASH_SIGNATURE_FILE gtdb-rs207.genomic-reps.dna.k$SOURMASH_K.zip --output $SOURMASH_OUTPUTS/$SOURMASH_OUTPUT_CSV
-
+sourmash sketch dna -p k=$SOURMASH_K,abund $R1_TRIMMED $R2_TRIMMED -o $SOURMASH_OUTPUTS/$SOURMASH_SIGNATURE_FILE --name new_sample
+sourmash gather $SOURMASH_OUTPUTS/$SOURMASH_SIGNATURE_FILE /sourmash/gtdb-rs207.genomic-reps.dna.k$SOURMASH_K.zip --output $SOURMASH_OUTPUTS/$SOURMASH_OUTPUT_CSV
 
 ## Download reference
 mkdir -p $REFERENCES_DIR
-NCBI_ID=$(cut -d',' -f 10 $SOURMASH_OUTPUT_CSV | grep -v name | head -1 | sed 's/"//g' | cut -d " " -f 1);
+NCBI_ID=$(cut -d',' -f 10 $SOURMASH_OUTPUTS/$SOURMASH_OUTPUT_CSV | grep -v name | head -1 | sed 's/"//g' | cut -d " " -f 1);
 curl -o $REFERENCES_DIR -OJX GET "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/$NCBI_ID/download?include_annotation_type=GENOME_FASTA&filename=${NCBI_ID}.zip" -H "Accept: application/zip" 
 unzip $REFERENCES_DIR/$NCBI_ID.zip
 REFERENCE=$REFERENCES_DIR/ncbi_dataset/data/$NCBI_ID/$NCBI_ID_genomic.fna
