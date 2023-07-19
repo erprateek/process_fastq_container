@@ -50,15 +50,16 @@ sourmash gather $SOURMASH_OUTPUTS/$SOURMASH_SIGNATURE_FILE /sourmash/gtdb-rs207.
 ## Download reference
 mkdir -p $REFERENCES_DIR
 NCBI_ID=$(cut -d',' -f 10 $SOURMASH_OUTPUTS/$SOURMASH_OUTPUT_CSV | grep -v name | head -1 | sed 's/"//g' | cut -d " " -f 1);
-curl -o $REFERENCES_DIR -OJX GET "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/$NCBI_ID/download?include_annotation_type=GENOME_FASTA&filename=${NCBI_ID}.zip" -H "Accept: application/zip" 
-unzip $REFERENCES_DIR/$NCBI_ID.zip
-REFERENCE=$REFERENCES_DIR/ncbi_dataset/data/$NCBI_ID/$NCBI_ID_genomic.fna
-
+curl -o $REFERENCES_DIR/$NCBI_ID.zip -OJX GET "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/$NCBI_ID/download?include_annotation_type=GENOME_FASTA&filename=${NCBI_ID}.zip" -H "Accept: application/zip"
+cd $REFERENCES_DIR
+unzip $NCBI_ID.zip
+REFERENCE=$REFERENCES_DIR/ncbi_dataset/data/${NCBI_ID}/${NCBI_ID}*_genomic.fna
+cd -
 ## BWA Index
 bwa index $REFERENCE
 
 ## Run Alignment
-bwa mem $REFERENCE $TRIM_GALORE_OUTPUTS/*1.fq.gz $TRIM_GALORE_OUTPUTS/*2.fq.gz | samtools view -bS $PIPELINE_OUTPUTS/sample.bam
+bwa mem $REFERENCE $TRIM_GALORE_OUTPUTS/*1.fq.gz $TRIM_GALORE_OUTPUTS/*2.fq.gz | samtools view -bS - > $PIPELINE_OUTPUTS/sample.bam
 
 ## Create plot
 #python generate_report.py -f $FASTQC_OUTPUTS_DIR -t $TRIM_GALORE_OUTPUTS -s $SOURMASH_OUTPUTS -b $PIPELINE_OUTPUTS/sample.bam -o $PIPELINE_OUTPUTS/report.csv
