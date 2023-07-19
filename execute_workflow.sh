@@ -25,19 +25,6 @@ if [ ! -f "$2" ]; then
     exit 1
 fi
 
-# Check if the provided files are in FASTQ format
-# We'll simply check if the first line starts with '@' which is a common indicator in FASTQ files
-if ! head -n 1 "$1" | grep -q '^@'; then
-    echo "Error: '$1' does not appear to be a valid FASTQ file."
-    exit 1
-fi
-
-if ! head -n 1 "$2" | grep -q '^@'; then
-    echo "Error: '$2' does not appear to be a valid FASTQ file."
-    exit 1
-fi
-echo "Both files '$1' and '$2' are valid FASTQ files. Proceeding with further processing."
-
 read1=$1
 read2=$2
 # Add your desired actions here, e.g., perform processing on read1 and read2
