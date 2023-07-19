@@ -77,7 +77,7 @@ def create_plots(bam_scores_file, read1, read2, limit=None, output_fname='plot.p
     
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-b", "--bam_qc_output_file")
+    parser.add_argument("-b", "--bam_scores_file")
     parser.add_argument("-1", "--read1")
     parser.add_argument("-2", "--read2")
     parser.add_argument("-l",'--limit', default=None)
