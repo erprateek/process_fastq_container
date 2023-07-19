@@ -16,16 +16,14 @@ def get_organism_from_sourmash(sourmash_csv):
     organism_name = name_split.replace(ncbi_id, "").replace("strain","").lstrip().rstrip()
     return (ncbi_id, organism_name)
 
-def get_isize_from_fq(fq):
-    seq_index_base = 1
-    seq_index_increment = 4
-    isize_lens = []
-    with gzip.open(fq, 'rt') as fh:
-        fqlines = fh.readlines()
-        for i in range(0, len(fqlines), seq_index_increment):
-            line_to_process = fqlines[i].strip()
-            isize_lens.append(len(line_to_process))
-    return isize_lens
+def get_isize_from_fq(fastq_file):
+    insert_sizes = []
+    with gzip.open(fastq_file, "rt") as file:
+        lines = file.readlines()
+        for i in range(0, len(lines), 4):
+            insert_size = len(lines[i + 1].strip()) 
+            insert_sizes.append(insert_size)
+    return insert_sizes
         
 def get_insert_size_mean_and_std(fq1, fq2):
     isize_mean = 0
@@ -38,7 +36,7 @@ def get_insert_size_mean_and_std(fq1, fq2):
     std_fq2 = np.std(isize_dist_fq2)
     mean_isize = np.mean(isize_dist_fq1+isize_dist_fq2)
     std_isize = np.std(isize_dist_fq1+isize_dist_fq2)
-    return (isize_mean, isize_std)
+    return (mean_isize, std_isize)
 
 def get_read_len_and_ilen_for_fq(fq):
     seq_len = 0
@@ -76,9 +74,7 @@ def get_sequencing_configuration(fq1, fq2):
 def count_reads_in_fastq(fastq_file):
     count = 0
     with gzip.open(fastq_file, 'rt') as file:
-        for line in file:
-            if line.startswith('@'):
-                count += 1
+        count = int(len(file.readlines())/4)
     return count
 
 def get_num_molecules(read1_fastq, read2_fastq):
@@ -88,7 +84,7 @@ def get_num_molecules(read1_fastq, read2_fastq):
     
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-f",'--fastqc_outputs_dir')
+    #parser.add_argument("-f",'--fastqc_outputs_dir')
     parser.add_argument("-1","--read1")
     parser.add_argument("-2","--read2")
     parser.add_argument('-3','--read1_trimmed')
