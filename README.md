@@ -27,3 +27,8 @@ docker run --rm -v <PATH_TO_FASTQ>/read1.fastq.gz:/read1.fastq.gz \
 -v <PATH_TO_FASTQ>/read2.fastq.gz:/read2.fastq.gz \
 -v <PATH_TO_OUTPUTS_DIR_ON_HOST>:/outputs tax_align_image bash execute_workflow.sh read1.fastq.gz read2.fastq.gz
 ```
+
+- Memory usage: Running the docker container did not show memory usage above 1.5GB
+- CPU Usage: Gave the container 8 cores access. All 8 cores get used.
+- Image Build time takes around 8-10 mins. Encountered multiple transient conda issues. They resolved on rerunning the build command.
+- Execution time ~ 15-20 mins.
