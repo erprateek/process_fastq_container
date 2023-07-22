@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 mkdir -p /sourmash;
 cd /sourmash;
 curl -JLO https://osf.io/3a6gn/download;
